@@ -1,0 +1,8 @@
+# IDE
+.idea
+*.iml
+
+# Backup
+*~
+*.bak
+
