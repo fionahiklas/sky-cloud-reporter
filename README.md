@@ -32,4 +32,5 @@ This created the initial `go.mod` file
 
 * [Go code organisation](https://golang.org/doc/code.html)
 * [Print a variables type](https://golangcode.com/print-variable-type/) 
+* [JSON Parsing](https://gobyexample.com/json)
  
