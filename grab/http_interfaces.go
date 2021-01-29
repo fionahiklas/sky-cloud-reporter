@@ -1,4 +1,4 @@
-//go:generate mockgen -destination=mocks/mock_http_interfaces.go -package=mocks . HttpResponse HttpClient
+//go:generate mockgen -destination=../mocks/mock_http_interfaces.go . HttpResponse,HttpClient
 
 package grab
 

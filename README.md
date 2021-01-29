@@ -20,6 +20,7 @@ Downloading the latest (1.15.7) from the [official site](https://golang.org/doc/
 
 ```
 export GOPATH=$HOME/wd/gobase
+export PATH=$PATH:$GOPATH/bin
 ```
 
 ### Get GoMock 
