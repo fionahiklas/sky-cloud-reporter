@@ -14,6 +14,10 @@ for Mac from [here](https://www.docker.com/products/docker-desktop)
 Downloading the latest (1.15.7) from the [official site](https://golang.org/doc/install?download=go1.15.7.darwin-amd64.pkg)
 
 
+## Getting Started
+
+
+
 ## Notes
 
 ### Creating basic module setup
@@ -26,6 +30,20 @@ go mod init github.com/fionahiklas/sky-cloud-reporter
 
 This created the initial `go.mod` file
 
+### Building the test HTTP client
+
+```
+go install cmd/testhttpclient/test_http_client.go
+```
+
+Will build and link the code and output an executable file called `test_http_client` and 
+place it under `$GOPATH/bin`
+
+Run using the following command
+
+```
+$GOPATH/bin/test_http_client http://localhost:9002/cloud/instances
+```
 
 
 ## References
