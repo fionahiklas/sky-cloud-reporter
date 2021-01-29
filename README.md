@@ -16,6 +16,26 @@ Downloading the latest (1.15.7) from the [official site](https://golang.org/doc/
 
 ## Getting Started
 
+### Set GOPATH
+
+```
+export GOPATH=$HOME/wd/gobase
+```
+
+### Get GoMock 
+
+```
+go get github.com/golang/mock/mockgen@v1.4.4
+```
+
+### Get code
+
+Get this code
+
+```
+go get github.com/fionahiklas/sky-cloud-reporter
+```
+
 
 
 ## Notes
@@ -51,4 +71,4 @@ $GOPATH/bin/test_http_client http://localhost:9002/cloud/instances
 * [Go code organisation](https://golang.org/doc/code.html)
 * [Print a variables type](https://golangcode.com/print-variable-type/) 
 * [JSON Parsing](https://gobyexample.com/json)
- 
+* [Gomock](https://github.com/golang/mock)
