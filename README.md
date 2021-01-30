@@ -66,6 +66,20 @@ Run using the following command
 $GOPATH/bin/test_http_client http://localhost:9002/cloud/instances
 ```
 
+### Using Go Plugin in IntelliJ
+
+This behaves slightly bizarrely compared to Java/Ruby and others that have SDKs which can 
+be added under the "Open Module Settings" dialog.  
+
+Under Preferences -> Languages -> Go select GOPATH and add a project specific GOPATH
+entry so that the IDE picks up any libraries loaded there
+
+### Getting go packages
+
+``` 
+go get github.com/golang/mock/mockgen@v1.4.4
+go get github.com/stretchr/testify/assert
+```
 
 ## References
 
@@ -73,3 +87,6 @@ $GOPATH/bin/test_http_client http://localhost:9002/cloud/instances
 * [Print a variables type](https://golangcode.com/print-variable-type/) 
 * [JSON Parsing](https://gobyexample.com/json)
 * [Gomock](https://github.com/golang/mock)
+* [Gomock documentation](https://pkg.go.dev/github.com/golang/mock#readme-running-mockgen)
+* [Go JSON](https://blog.golang.org/json)
+* [Go assert package](https://github.com/stretchr/testify)
