@@ -1,12 +1,35 @@
 package grab
 
 import (
-	"github.com/fionahiklas/sky-cloud-reporter/common/http"
+	"bytes"
+	"github.com/fionahiklas/sky-cloud-reporter/common/reporter"
 	"github.com/fionahiklas/sky-cloud-reporter/mocks/mock_grab"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"io"
+	"io/ioutil"
+	"net/http"
 	"testing"
 )
+
+const testSimpleJson = `
+[{
+"ID": "LadyMargolotta", 
+"TeamName": "vampires",
+"Machine": "t2.large",
+"IPAddress": "240.99.253.110", 
+"DeployedRegion": "uberwald",
+"State": "dead"
+},
+{
+"ID": "Angua", 
+"TeamName": "werewolves",
+"Machine": "t2.large",
+"IPAddress": "240.99.253.123", 
+"DeployedRegion": "ankhmorpork",
+"State": "running"
+}]
+`
 
 func TestNewGrabber(t *testing.T) {
 	assert := assert.New(t)
@@ -34,6 +57,11 @@ func TestGrabInstancesSimpleCloud(t *testing.T) {
 	grabber := NewGrabber(httpClient, cloudProvider)
 
 	const urlString = "http://anhk.morpork/instances"
+	httpResponse := http.Response{
+		StatusCode: 200,
+		Body: convertJsonStringToReadCloser(testSimpleJson),
+	}
+	machineInstances := []reporter.MachineInstance{}
 
 	cloudProvider.EXPECT().GetInstanceUrl().
 		Return(urlString).
@@ -41,10 +69,19 @@ func TestGrabInstancesSimpleCloud(t *testing.T) {
 
 	httpClient.EXPECT().
 		Get(gomock.Eq(urlString)).
-		Return(new(http.Response))
+		Return(&httpResponse, nil)
 
-	result := grabber.GrabInstances()
+	cloudProvider.EXPECT().
+		ConvertResponseToMachineInstances(gomock.Eq(&httpResponse)).
+		Return(&machineInstances, nil)
+
+	result, resultError := grabber.GrabInstances()
 	assert.NotNil(result)
+	assert.Equal(&machineInstances, result)
+	assert.Nil(resultError)
 }
 
 
+func convertJsonStringToReadCloser(jsonString string) io.ReadCloser {
+	return ioutil.NopCloser(bytes.NewReader([]byte(jsonString)))
+}

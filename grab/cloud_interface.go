@@ -2,7 +2,12 @@
 
 package grab
 
+import (
+	"github.com/fionahiklas/sky-cloud-reporter/common/reporter"
+	"net/http"
+)
+
 type CloudProvider interface {
 	GetInstanceUrl() string
-
+	ConvertResponseToMachineInstances(response *http.Response) (machines *[]reporter.MachineInstance, err error)
 }

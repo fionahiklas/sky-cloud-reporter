@@ -2,8 +2,8 @@
 
 package grab
 
-import "github.com/fionahiklas/sky-cloud-reporter/common/http"
+import "net/http"
 
 type HttpClient interface {
-	Get(string) *http.Response
+	Get(string) (resp *http.Response, err error)
 }
