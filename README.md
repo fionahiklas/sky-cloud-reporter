@@ -46,7 +46,7 @@ go generate ./...
 ### Run the tests
 
 ```
-
+go test ./...
 ```
 
 
@@ -114,10 +114,16 @@ wouldn't work anyway since the HttpResponse is still defined in `grab` and is ne
 * [Go code organisation](https://golang.org/doc/code.html)
 * [Print a variables type](https://golangcode.com/print-variable-type/) 
 * [JSON Parsing](https://gobyexample.com/json)
+* [Go JSON](https://blog.golang.org/json)
+
+
+### Testing
+
 * [Gomock](https://github.com/golang/mock)
 * [Gomock documentation](https://pkg.go.dev/github.com/golang/mock#readme-running-mockgen)
-* [Go JSON](https://blog.golang.org/json)
 * [Go assert package](https://github.com/stretchr/testify)
+* [Setup/teardown for tests](https://stackoverflow.com/questions/23729790/how-can-i-do-test-setup-using-the-testing-package-in-go)
+
 
 ### Issues
 
