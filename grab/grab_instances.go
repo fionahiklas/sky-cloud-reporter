@@ -14,9 +14,17 @@ func NewGrabber(client HttpClient, provider CloudProvider) *cloudGrabber {
 	}
 }
 
-func (grabber *cloudGrabber) GrabInstances() (instances *[]reporter.MachineInstance, err error) {
-	urlString, _ := grabber.cloudProvider.GenerateNextUrl()
-	httpResponse, _ := grabber.httpClient.Get(urlString)
-	instances, err = grabber.cloudProvider.ProcessResponse(httpResponse)
-	return instances, err
+func (grabber *cloudGrabber) GrabInstances() (instances []reporter.MachineInstance, err error) {
+	resultCollector := make([]reporter.MachineInstance, 0, 10)
+
+	for {
+		urlString, done := grabber.cloudProvider.GenerateNextUrl()
+		if done {
+			break
+		}
+		httpResponse, _ := grabber.httpClient.Get(urlString)
+		processedInstances, _ := grabber.cloudProvider.ProcessResponse(httpResponse)
+		resultCollector = append(resultCollector, processedInstances...)
+	}
+	return resultCollector, nil
 }

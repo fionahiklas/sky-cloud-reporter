@@ -31,6 +31,33 @@ const testSimpleJson = `
 }]
 `
 
+const testPagingJsonOne = `
+{
+"total": 2,
+"count": 1,
+"instances": [{
+	"instance_id": "LadyMargolotta", 
+	"team": "vampires",
+	"instance_type": "t2.large",
+	"ip_address": "240.99.253.110", 
+	"region": "uberwald",
+	"instance_state": "dead"
+}]
+`
+
+const testPagingJsonTwo = `
+{
+"total": 2,
+"count": 1,
+"instances": [{
+	"instance_id": "Angua", 
+	"team": "werewolves",
+	"instance_type": "t2.large",
+	"ip_address": "240.99.253.123", 
+	"region": "ankhmorpork",
+	"instance_state": "running"
+}]
+`
 
 
 func TestNewGrabber(t *testing.T) {
@@ -65,9 +92,10 @@ func TestGrabInstancesSimpleCloud(t *testing.T) {
 	}
 	machineInstances := []reporter.MachineInstance{}
 
-	cloudProvider.EXPECT().GenerateNextUrl().
-		Return(urlString, true).
-		MaxTimes(1)
+	gomock.InOrder(
+		cloudProvider.EXPECT().GenerateNextUrl().Return(urlString, false),
+		cloudProvider.EXPECT().GenerateNextUrl().Return("", true),
+	)
 
 	httpClient.EXPECT().
 		Get(gomock.Eq(urlString)).
@@ -75,13 +103,77 @@ func TestGrabInstancesSimpleCloud(t *testing.T) {
 
 	cloudProvider.EXPECT().
 		ProcessResponse(gomock.Eq(&httpResponse)).
-		Return(&machineInstances, nil)
+		Return(machineInstances, nil)
 
 	result, resultError := grabber.GrabInstances()
 	assert.NotNil(result)
-	assert.Equal(&machineInstances, result)
+	assert.Equal(machineInstances, result)
 	assert.Nil(resultError)
 }
+
+
+func TestGrabInstancesCloudWithPaging(t *testing.T) {
+	assert := assert.New(t)
+	ctrl := gomock.NewController(t)
+
+	defer ctrl.Finish()
+
+	httpClient := mock_grab.NewMockHttpClient(ctrl)
+	cloudProvider := mock_grab.NewMockCloudProvider(ctrl)
+
+	grabber := NewGrabber(httpClient, cloudProvider)
+
+	const urlStringOne = "http://anhk.morpork/instances?page=1"
+	const urlStringTwo = "http://anhk.morpork/instances?page=2"
+	httpResponseOne := http.Response{
+		StatusCode: 200,
+		Body: convertJsonStringToReadCloser(testPagingJsonOne),
+	}
+	httpResponseTwo := http.Response{
+		StatusCode: 200,
+		Body: convertJsonStringToReadCloser(testPagingJsonTwo),
+	}
+
+	machineInstancesOne := []reporter.MachineInstance{
+		{
+			Id: "LadyMargolotta",
+			Team: "vampires",
+		},
+	}
+
+	machineInstancesTwo := []reporter.MachineInstance{
+		{
+			Id: "Angua",
+			Team: "werewolves",
+		},
+	}
+
+	machineInstancesResult := make([]reporter.MachineInstance, 0, 2)
+	machineInstancesResult = append(machineInstancesResult, machineInstancesOne...)
+	machineInstancesResult = append(machineInstancesResult, machineInstancesTwo...)
+
+	gomock.InOrder(
+		cloudProvider.EXPECT().GenerateNextUrl().Return(urlStringOne, false),
+		cloudProvider.EXPECT().GenerateNextUrl().Return(urlStringTwo, false),
+		cloudProvider.EXPECT().GenerateNextUrl().Return("", true),
+	)
+
+	gomock.InOrder(
+		httpClient.EXPECT().Get(gomock.Eq(urlStringOne)).Return(&httpResponseOne, nil),
+		httpClient.EXPECT().Get(gomock.Eq(urlStringTwo)).Return(&httpResponseTwo, nil),
+	)
+
+	gomock.InOrder(
+		cloudProvider.EXPECT().ProcessResponse(gomock.Eq(&httpResponseOne)).Return(machineInstancesOne, nil),
+		cloudProvider.EXPECT().ProcessResponse(gomock.Eq(&httpResponseTwo)).Return(machineInstancesTwo, nil),
+	)
+
+	result, resultError := grabber.GrabInstances()
+	assert.NotNil(result)
+	assert.Equal(machineInstancesResult, result)
+	assert.Nil(resultError)
+}
+
 
 
 func convertJsonStringToReadCloser(jsonString string) io.ReadCloser {

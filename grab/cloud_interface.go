@@ -32,7 +32,7 @@ type CloudProvider interface {
 	// that support paging this will also update the page and URL to be used
 	// next.  If there are any errors in processing the HTTP response they are
 	// returned in err and no instances will be returned
-	ProcessResponse(response *http.Response) (machines *[]reporter.MachineInstance, err error)
+	ProcessResponse(response *http.Response) (machines []reporter.MachineInstance, err error)
 
 	// Return a function that can be used to reset this provider instance so
 	// that it can be used again for subsequent requests.  For providers that

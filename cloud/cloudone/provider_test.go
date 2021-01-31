@@ -76,6 +76,7 @@ func TestResetFunction(t *testing.T) {
 	assert.Equal(false, provider.Done)
 }
 
+
 func convertJsonStringToReadCloser(jsonString string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(jsonString)))
 }

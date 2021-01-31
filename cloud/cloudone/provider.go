@@ -10,7 +10,7 @@ type provider struct {
 	Done bool
 }
 
-func NewProvider(baseUrl string) (*provider) {
+func NewProvider(baseUrl string) *provider {
 	return &provider{
 		BaseUrl: baseUrl,
 		Done: false,
@@ -22,11 +22,21 @@ func (provider *provider) RequiresPaging() bool {
 }
 
 func (provider *provider) GenerateNextUrl() (url string, done bool) {
-	return "", false
+	done = provider.Done
+	if done == false {
+		url = provider.BaseUrl + "/instances"
+	} else {
+		url = ""
+	}
+	return
 }
 
-func (provider *provider) ProcessResponse(response *http.Response) (machines *[]reporter.MachineInstance, err error) {
-	return nil, nil
+func (provider *provider) ProcessResponse(response *http.Response) (machines []reporter.MachineInstance, err error) {
+
+	if err == nil {
+		provider.Done = true
+	}
+	return
 }
 
 func (provider *provider) ResetFunction() func() {

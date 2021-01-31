@@ -11,6 +11,6 @@ type CloudTwoInstance struct {
 
 type CloudTwo struct {
 	Total     int                `json:"total"`
-	Count     int                `json:"Count""`
+	Count     int                `json:"count"`
 	Instances []CloudTwoInstance `json:"instances"`
 }

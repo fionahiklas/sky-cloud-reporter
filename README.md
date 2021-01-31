@@ -115,7 +115,10 @@ wouldn't work anyway since the HttpResponse is still defined in `grab` and is ne
 * [Print a variables type](https://golangcode.com/print-variable-type/) 
 * [JSON Parsing](https://gobyexample.com/json)
 * [Go JSON](https://blog.golang.org/json)
-
+* [Initialising slices of structs](https://stackoverflow.com/questions/26159416/init-array-of-structs-in-go)
+* [Appending slices](https://golang.org/pkg/builtin/#append)
+* [Creating slices with length/capacity](https://blog.golang.org/slices-intro)
+* [Convert between bytes and strings](https://yourbasic.org/golang/convert-string-to-byte-slice/)
 
 ### Testing
 
