@@ -1,6 +1,6 @@
-package grab
+package reporter
 
-type ReporterInstance struct {
+type MachineInstance struct {
 	Id      string `json:"id"`
 	Team    string `json:"team"`
 	Machine string `json:"machine"`

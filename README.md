@@ -37,6 +37,17 @@ Get this code
 go get github.com/fionahiklas/sky-cloud-reporter
 ```
 
+### Generate the mocks
+
+```
+go generate ./...
+```
+
+### Run the tests
+
+```
+
+```
 
 
 ## Notes
@@ -81,7 +92,24 @@ go get github.com/golang/mock/mockgen@v1.4.4
 go get github.com/stretchr/testify/assert
 ```
 
+### Using mockgen with `-self_package`
+
+As per some of the suggestions for solving mocking cycles I tried using the `-self_package`
+option in the `go:generate` lines running `mockgen`
+
+``` 
+//go:generate mockgen -package=grab -destination=../mocks/grab/mock_http_interfaces.go -self_package=github.com/fionahiklas/sky-cloud-reporter/grab . HttpResponse,HttpClient
+```
+
+Without the full path for self package it didn't do what was intended which was to strip 
+out the import for the `grab` package.  The problem is that using the line above resulted in code that 
+wouldn't work anyway since the HttpResponse is still defined in `grab` and is needed to compile
+
+
+
 ## References
+
+### Golang
 
 * [Go code organisation](https://golang.org/doc/code.html)
 * [Print a variables type](https://golangcode.com/print-variable-type/) 
@@ -90,3 +118,10 @@ go get github.com/stretchr/testify/assert
 * [Gomock documentation](https://pkg.go.dev/github.com/golang/mock#readme-running-mockgen)
 * [Go JSON](https://blog.golang.org/json)
 * [Go assert package](https://github.com/stretchr/testify)
+
+### Issues
+
+#### Import cycles with mocks
+
+* [Importing package for dependent interfaces](https://github.com/golang/mock/issues/352)
+* [Using different packages to resolve cycles](https://stackoverflow.com/questions/50986170/how-to-avoid-import-cycles-in-mock-generation)
