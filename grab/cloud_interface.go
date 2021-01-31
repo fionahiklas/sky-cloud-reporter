@@ -16,12 +16,15 @@ type CloudProvider interface {
 
 	// Generate the next HTTP URL to use to request data from the
 	// providers instance endpoint.  For providers that don't need paging
-	// this will be called once and return the single URL.  For the paging
-	// case this will return an initial URL and will then update to the
-	// next page once the response has been processed by calling
+	// this will be called once and return the single URL.  Once the
+	// ProcessResponse() call is made subsequent calls to this function will
+	// return done as true to indicate that no further processing is needed.
+	// For the paging case this will return an initial URL and will then update
+	// to the next page once the response has been processed by calling
 	// ProcessResponse() since the information about the size of the results
 	// is embedded in the JSON.  If there are no more pages the done return
 	// value will be "true".
+	// The done value is false initially in both the paging and non-paging cases
 	GenerateNextUrl() (url string, done bool)
 
 	// Process the HTTP response from the cloud provider.  Convert machine

@@ -33,3 +33,4 @@ func TestNewProvider(t *testing.T) {
 	assert.IsType(&provider{}, result)
 	assert.Equal(baseUrl, result.BaseUrl)
 }
+

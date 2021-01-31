@@ -31,6 +31,8 @@ const testSimpleJson = `
 }]
 `
 
+
+
 func TestNewGrabber(t *testing.T) {
 	assert := assert.New(t)
 	ctrl := gomock.NewController(t)
