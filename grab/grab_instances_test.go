@@ -63,8 +63,8 @@ func TestGrabInstancesSimpleCloud(t *testing.T) {
 	}
 	machineInstances := []reporter.MachineInstance{}
 
-	cloudProvider.EXPECT().GetInstanceUrl().
-		Return(urlString).
+	cloudProvider.EXPECT().GenerateNextUrl().
+		Return(urlString, true).
 		MaxTimes(1)
 
 	httpClient.EXPECT().
@@ -72,7 +72,7 @@ func TestGrabInstancesSimpleCloud(t *testing.T) {
 		Return(&httpResponse, nil)
 
 	cloudProvider.EXPECT().
-		ConvertResponseToMachineInstances(gomock.Eq(&httpResponse)).
+		ProcessResponse(gomock.Eq(&httpResponse)).
 		Return(&machineInstances, nil)
 
 	result, resultError := grabber.GrabInstances()
