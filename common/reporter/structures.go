@@ -11,7 +11,7 @@ type MachineInstance struct {
 
 type TeamInstances struct {
 	Count int `json: "count"`
-	Instances []MachineInstance `json: "instances"`
+	Instances []*MachineInstance `json: "instances"`
 }
 
-type MachineReport map[string]TeamInstances
+type MachineReport map[string]*TeamInstances
