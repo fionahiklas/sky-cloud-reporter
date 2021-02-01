@@ -8,3 +8,10 @@ type MachineInstance struct {
 	State   string `json:"state"`
 	Region  string `json:"region"`
 }
+
+type TeamInstances struct {
+	Count int `json: "count"`
+	Instances []MachineInstance `json: "instances"`
+}
+
+type MachineReport map[string]TeamInstances
