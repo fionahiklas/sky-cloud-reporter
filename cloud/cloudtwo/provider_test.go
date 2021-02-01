@@ -41,6 +41,17 @@ const testPagingJsonTwo = `
 }
 `
 
+var testReporterInstancesOne = []reporter.MachineInstance{
+	{
+		Id:      "LadyMargolotta",
+		Team:    "vampires",
+		Machine: "t2.large",
+		Ip:      "240.99.253.110",
+		State:   "dead",
+		Region:  "uberwald",
+	},
+}
+
 func TestNewProvider(t *testing.T) {
 	assert := assert.New(t)
 
@@ -129,6 +140,19 @@ func TestMappingFromCloudToReporter(t *testing.T) {
 	result := convertCloudStructToCommon(testCloudInstance)
 
 	assert.Equal(expectedReporterInstance, result)
+}
+
+func TestProcessResponseConversion(t *testing.T) {
+	assert := assert.New(t)
+
+	provider := NewProvider(baseUrl)
+	result, err := 	provider.ProcessResponse(&http.Response{ StatusCode: 200, Body: convertJsonStringToReadCloser(testPagingJsonOne)})
+
+	assert.Nil(err)
+	assert.Equal(testReporterInstancesOne, result)
+	assert.Equal(2, provider.Total)
+	assert.Equal(2, provider.CurrentPage)
+	assert.Equal(1, provider.ProcessedSoFar)
 }
 
 func convertJsonStringToReadCloser(jsonString string) io.ReadCloser {

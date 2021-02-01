@@ -1,7 +1,9 @@
 package cloudone
 
 import (
+	"encoding/json"
 	"github.com/fionahiklas/sky-cloud-reporter/common/reporter"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -32,8 +34,15 @@ func (provider *provider) GenerateNextUrl() (url string, done bool) {
 }
 
 func (provider *provider) ProcessResponse(response *http.Response) (machines []reporter.MachineInstance, err error) {
+	var instances CloudOne
+	bodyBytes, _ := ioutil.ReadAll(response.Body)
+	jsonErr := json.Unmarshal(bodyBytes, &instances)
 
-	if err == nil {
+	if jsonErr == nil {
+		machines = make([]reporter.MachineInstance, 0, len(instances))
+		for _, instance := range instances {
+			machines = append(machines, convertCloudStructToCommon(instance))
+		}
 		provider.Done = true
 	}
 	return

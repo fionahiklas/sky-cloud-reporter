@@ -40,16 +40,21 @@ func (provider *provider) GenerateNextUrl() (url string, done bool) {
 }
 
 func (provider *provider) ProcessResponse(response *http.Response) (machines []reporter.MachineInstance, err error) {
-	var instance CloudTwo
+	var instances CloudTwo
 	bodyBytes, _ := ioutil.ReadAll(response.Body)
-	jsonErr := json.Unmarshal(bodyBytes, &instance)
+	jsonErr := json.Unmarshal(bodyBytes, &instances)
 
 	if jsonErr == nil {
-		provider.Total = instance.Total
-		provider.ProcessedSoFar += instance.Count
+		machines = make([]reporter.MachineInstance, 0, instances.Count)
+		for _, instance := range instances.Instances {
+			machines = append(machines, convertCloudStructToCommon(instance))
+		}
+
+		provider.Total = instances.Total
+		provider.ProcessedSoFar += instances.Count
 		provider.CurrentPage += 1
 	}
-	return nil, nil
+	return
 }
 
 func (provider *provider) ResetFunction() func() {
@@ -59,25 +64,6 @@ func (provider *provider) ResetFunction() func() {
 		provider.ProcessedSoFar = 0
 	}
 }
-
-//testCloudInstance := CloudTwoInstance{
-//InstanceId:    "SamVimes",
-//Team:          "CitWatch",
-//InstanceType:  "BSJohnson",
-//IpAddress:     "treaclemine.road",
-//Region:        "TheShades",
-//InstanceState: "Vetinari",
-//}
-//
-//expectedReporterInstance := reporter.MachineInstance{
-//Id:      "SamVimes",
-//Team:    "CityWatch",
-//Machine: "BSJohnson",
-//Ip:      "treaclemine.road",
-//State:   "Vetinari",
-//Region:  "TheShades",
-//}
-
 
 func convertCloudStructToCommon(cloudInstance CloudTwoInstance) reporter.MachineInstance {
 	return reporter.MachineInstance{

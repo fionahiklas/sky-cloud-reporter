@@ -30,6 +30,26 @@ const testSimpleJson = `
 }]
 `
 
+var testReporterInstances = []reporter.MachineInstance{
+	{
+		Id:      "LadyMargolotta",
+		Team:    "vampires",
+		Machine: "t2.large",
+		Ip:      "240.99.253.110",
+		State:   "dead",
+		Region:  "uberwald",
+	},
+	{
+		Id:      "Angua",
+		Team:    "werewolves",
+		Machine: "t2.large",
+		Ip:      "240.99.253.123",
+		State:   "running",
+		Region:  "ankhmorpork",
+
+	},
+}
+
 func TestNewProvider(t *testing.T) {
 	assert := assert.New(t)
 
@@ -102,6 +122,17 @@ func TestMappingFromCloudToReporter(t *testing.T) {
 
 	assert.Equal(expectedReporterInstance, result)
 }
+
+func TestProcessResponseConversion(t *testing.T) {
+	assert := assert.New(t)
+
+	provider := NewProvider(baseUrl)
+	result, err := 	provider.ProcessResponse(&http.Response{ StatusCode: 200, Body: convertJsonStringToReadCloser(testSimpleJson)})
+
+	assert.Nil(err)
+	assert.Equal(testReporterInstances, result)
+}
+
 
 func convertJsonStringToReadCloser(jsonString string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(jsonString)))
