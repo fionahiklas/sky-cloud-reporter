@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/fionahiklas/sky-cloud-reporter/common/reporter"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -16,6 +17,7 @@ type provider struct {
 }
 
 func NewProvider(baseUrl string) (*provider) {
+	log.Printf("Creating CloudTwo provider")
 	return &provider{
 		BaseUrl: baseUrl,
 		CurrentPage: 1,
@@ -36,10 +38,14 @@ func (provider *provider) GenerateNextUrl() (url string, done bool) {
 	} else {
 		url = ""
 	}
+	log.Printf("CloudTwo URL: %s, done: %t", url, done)
 	return
 }
 
 func (provider *provider) ProcessResponse(response *http.Response) (machines []reporter.MachineInstance, err error) {
+	log.Printf("Processing CloudTwo, CurrentPage: %d, Total: %d, ProcessedSoFar: %d",
+		provider.CurrentPage, provider.Total, provider.ProcessedSoFar)
+
 	var instances CloudTwo
 	bodyBytes, _ := ioutil.ReadAll(response.Body)
 	jsonErr := json.Unmarshal(bodyBytes, &instances)
@@ -54,6 +60,9 @@ func (provider *provider) ProcessResponse(response *http.Response) (machines []r
 		provider.ProcessedSoFar += instances.Count
 		provider.CurrentPage += 1
 	}
+
+	log.Printf("Processed CloudTwo, CurrentPage: %d, Total: %d, ProcessedSoFar: %d",
+		provider.CurrentPage, provider.Total, provider.ProcessedSoFar)
 	return
 }
 

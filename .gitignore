@@ -6,3 +6,8 @@
 *~
 *.bak
 
+# Log files
+*.log
+
+
+

@@ -123,7 +123,7 @@ wouldn't work anyway since the HttpResponse is still defined in `grab` and is ne
 * [Convert between bytes and strings](https://yourbasic.org/golang/convert-string-to-byte-slice/)
 * [Slice internals](https://blog.golang.org/slices)
 * [for loops, range, and slices](https://gobyexample.com/range)
-
+* [Prettty print JSON](https://golangbyexample.com/print-struct-variables-golang/)
 
 ### Testing
 
