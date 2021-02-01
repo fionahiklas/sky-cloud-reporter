@@ -93,6 +93,10 @@ func TestGrabInstancesSimpleCloud(t *testing.T) {
 	}
 	machineInstances := []reporter.MachineInstance{}
 
+	cloudProvider.EXPECT().
+		ResetFunction().
+		Return(func() { log.Printf("RESET FUNCTION CALLED") })
+
 	gomock.InOrder(
 		cloudProvider.EXPECT().GenerateNextUrl().Return(urlString, false),
 		cloudProvider.EXPECT().GenerateNextUrl().Return("", true),
@@ -152,6 +156,10 @@ func TestGrabInstancesCloudWithPaging(t *testing.T) {
 	machineInstancesResult := make([]reporter.MachineInstance, 0, 2)
 	machineInstancesResult = append(machineInstancesResult, machineInstancesOne...)
 	machineInstancesResult = append(machineInstancesResult, machineInstancesTwo...)
+
+	cloudProvider.EXPECT().
+		ResetFunction().
+		Return(func() { log.Printf("RESET FUNCTION CALLED") })
 
 	gomock.InOrder(
 		cloudProvider.EXPECT().GenerateNextUrl().Return(urlStringOne, false),

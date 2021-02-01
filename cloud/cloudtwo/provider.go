@@ -18,12 +18,14 @@ type provider struct {
 
 func NewProvider(baseUrl string) (*provider) {
 	log.Printf("Creating CloudTwo provider")
-	return &provider{
+	result := new(provider)
+	*result = provider{
 		BaseUrl: baseUrl,
 		CurrentPage: 1,
 		Total: 0,
 		ProcessedSoFar: 0,
 	}
+	return result
 }
 
 func (provider *provider) RequiresPaging() bool {

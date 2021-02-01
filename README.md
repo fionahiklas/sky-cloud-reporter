@@ -2,6 +2,7 @@
 
 Coding exercise to read cloud instance data and present as a single, unified output
 
+
 ## Tools
 
 ### Docker
@@ -50,6 +51,21 @@ go test -cover ./...
 ```
 
 Coverage should be, ideally, > 90%
+
+### Run the command line to grab instances
+
+Start the docker containers
+
+```
+docker run -d -p 9001:9001 enrico5b1b4/cloud1-api
+docker run -d -p 9002:9002 enrico5b1b4/cloud1-api
+```
+Build and run the CLI
+
+```
+go install ./cmd/grabinstances
+grabinstances http://localhost:9001 http://localhost:9002
+```
 
 
 ## Notes
@@ -124,6 +140,8 @@ wouldn't work anyway since the HttpResponse is still defined in `grab` and is ne
 * [Slice internals](https://blog.golang.org/slices)
 * [for loops, range, and slices](https://gobyexample.com/range)
 * [Prettty print JSON](https://golangbyexample.com/print-struct-variables-golang/)
+* [Go http package](https://golang.org/pkg/net/http/)
+
 
 ### Testing
 
@@ -131,7 +149,9 @@ wouldn't work anyway since the HttpResponse is still defined in `grab` and is ne
 * [Gomock documentation](https://pkg.go.dev/github.com/golang/mock#readme-running-mockgen)
 * [Go assert package](https://github.com/stretchr/testify)
 * [Setup/teardown for tests](https://stackoverflow.com/questions/23729790/how-can-i-do-test-setup-using-the-testing-package-in-go)
-
+* [Go testing with mocks](https://blog.codecentric.de/en/2017/08/gomock-tutorial/)
+* [Can't compare functions](https://stackoverflow.com/questions/9643205/how-do-i-compare-two-functions-for-pointer-equality-in-the-latest-go-weekly)
+* [Further issue with comparing functions](https://github.com/stretchr/testify/issues/182)
 
 ### Issues
 
