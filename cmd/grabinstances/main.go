@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"github.com/fionahiklas/sky-cloud-reporter/cloud/cloudone"
 	"github.com/fionahiklas/sky-cloud-reporter/cloud/cloudtwo"
+	"github.com/fionahiklas/sky-cloud-reporter/common/reporter"
 	"github.com/fionahiklas/sky-cloud-reporter/grab"
+	"github.com/fionahiklas/sky-cloud-reporter/sorter"
 	"log"
 	"net/http"
 	"os"
@@ -30,11 +32,15 @@ func main() {
 	log.Printf("Grabbing instances from provider two")
 	grabTwoInstances, _ := grabberTwo.GrabInstances()
 
-	log.Printf("Instances from one ...\n")
-	onePrettyPrint, _ := json.MarshalIndent(grabOneInstances, "", "    ")
-	log.Printf("%s\n", onePrettyPrint)
+	log.Printf("Sticking the results together")
+	allInstanceResults := make([]reporter.MachineInstance, 0, 10)
+	allInstanceResults = append(allInstanceResults, grabOneInstances...)
+	allInstanceResults = append(allInstanceResults, grabTwoInstances...)
 
-	log.Printf("Instances from two ...\n")
-	twoPrettyPrint, _ := json.MarshalIndent(grabTwoInstances, "", "    ")
-	log.Printf("%s\n", twoPrettyPrint)
+	resultMap := make(reporter.MachineReport)
+	sorter.SortIntoTeams(allInstanceResults, resultMap, true)
+
+	log.Printf("Result map ...\n")
+	resultPrettyPrint, _ := json.MarshalIndent(resultMap, "", "    ")
+	log.Printf("%s\n", resultPrettyPrint)
 }

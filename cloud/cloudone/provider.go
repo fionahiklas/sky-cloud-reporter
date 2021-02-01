@@ -45,8 +45,10 @@ func (provider *provider) ProcessResponse(response *http.Response) (machines []r
 	jsonErr := json.Unmarshal(bodyBytes, &instances)
 
 	if jsonErr == nil {
+		// We know how big the list of instances is
 		machines = make([]reporter.MachineInstance, 0, len(instances))
 		for _, instance := range instances {
+			// This should always be fine since the slice has the correct capacity
 			machines = append(machines, convertCloudStructToCommon(instance))
 		}
 		provider.Done = true
@@ -62,6 +64,7 @@ func (provider *provider) ResetFunction() func() {
 	}
 }
 
+// TODO: Maybe this would be more efficient to return a pointer
 func convertCloudStructToCommon(cloudInstance CloudOneInstance) reporter.MachineInstance {
 	return reporter.MachineInstance{
 		Id:      cloudInstance.Id,

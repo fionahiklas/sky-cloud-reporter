@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"testing"
 )
@@ -172,6 +173,56 @@ func TestGrabInstancesCloudWithPaging(t *testing.T) {
 	assert.NotNil(result)
 	assert.Equal(machineInstancesResult, result)
 	assert.Nil(resultError)
+}
+
+
+func TestGrabInstancesSimpleCloudResetCalled(t *testing.T) {
+	assert := assert.New(t)
+	ctrl := gomock.NewController(t)
+
+	defer ctrl.Finish()
+
+	resetCalled := false
+
+	httpClient := mock_grab.NewMockHttpClient(ctrl)
+	cloudProvider := mock_grab.NewMockCloudProvider(ctrl)
+
+	grabber := NewGrabber(httpClient, cloudProvider)
+
+	const urlString = "http://anhk.morpork/instances"
+	httpResponse := http.Response{
+		StatusCode: 200,
+		Body: convertJsonStringToReadCloser(testSimpleJson),
+	}
+	machineInstances := []reporter.MachineInstance{}
+
+	gomock.InOrder(
+		cloudProvider.EXPECT().GenerateNextUrl().Return(urlString, false),
+		cloudProvider.EXPECT().GenerateNextUrl().Return("", true),
+	)
+
+	cloudProvider.EXPECT().
+		ProcessResponse(gomock.Eq(&httpResponse)).
+		Return(machineInstances, nil)
+
+	cloudProvider.EXPECT().
+		ResetFunction().
+		Return(func() {
+			log.Printf("RESET FUNCTION CALLED")
+			resetCalled = true
+		})
+
+	httpClient.EXPECT().
+		Get(gomock.Eq(urlString)).
+		Return(&httpResponse, nil)
+
+	// Call the grabber
+	result, resultError := grabber.GrabInstances()
+
+	assert.NotNil(result)
+	assert.Equal(machineInstances, result)
+	assert.Nil(resultError)
+	assert.Equal(resetCalled, true)
 }
 
 

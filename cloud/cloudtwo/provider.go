@@ -51,8 +51,10 @@ func (provider *provider) ProcessResponse(response *http.Response) (machines []r
 	jsonErr := json.Unmarshal(bodyBytes, &instances)
 
 	if jsonErr == nil {
+		// We know the total number of results here so the slice can have a fixed capacity
 		machines = make([]reporter.MachineInstance, 0, instances.Count)
 		for _, instance := range instances.Instances {
+			// This should always be fine since the capacity should never be exceeded
 			machines = append(machines, convertCloudStructToCommon(instance))
 		}
 
@@ -74,6 +76,7 @@ func (provider *provider) ResetFunction() func() {
 	}
 }
 
+// TODO: Maybe this would be more efficient to return a pointer
 func convertCloudStructToCommon(cloudInstance CloudTwoInstance) reporter.MachineInstance {
 	return reporter.MachineInstance{
 		Id:      cloudInstance.InstanceId,
