@@ -59,3 +59,33 @@ func (provider *provider) ResetFunction() func() {
 		provider.ProcessedSoFar = 0
 	}
 }
+
+//testCloudInstance := CloudTwoInstance{
+//InstanceId:    "SamVimes",
+//Team:          "CitWatch",
+//InstanceType:  "BSJohnson",
+//IpAddress:     "treaclemine.road",
+//Region:        "TheShades",
+//InstanceState: "Vetinari",
+//}
+//
+//expectedReporterInstance := reporter.MachineInstance{
+//Id:      "SamVimes",
+//Team:    "CityWatch",
+//Machine: "BSJohnson",
+//Ip:      "treaclemine.road",
+//State:   "Vetinari",
+//Region:  "TheShades",
+//}
+
+
+func convertCloudStructToCommon(cloudInstance CloudTwoInstance) reporter.MachineInstance {
+	return reporter.MachineInstance{
+		Id:      cloudInstance.InstanceId,
+		Team:    cloudInstance.Team,
+		Machine: cloudInstance.InstanceType,
+		Ip:      cloudInstance.IpAddress,
+		State:   cloudInstance.InstanceState,
+		Region:  cloudInstance.Region,
+	}
+}

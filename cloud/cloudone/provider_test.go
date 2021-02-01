@@ -2,6 +2,7 @@ package cloudone
 
 import (
 	"bytes"
+	"github.com/fionahiklas/sky-cloud-reporter/common/reporter"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"io/ioutil"
@@ -76,6 +77,31 @@ func TestResetFunction(t *testing.T) {
 	assert.Equal(false, provider.Done)
 }
 
+func TestMappingFromCloudToReporter(t *testing.T) {
+	assert := assert.New(t)
+
+	testCloudInstance := CloudOneInstance{
+		Id:             "SamVimes",
+		TeamName:       "CityWatch",
+		Machine:        "BSJohnson",
+		IpAddress:      "treaclemine.road",
+		DeployedRegion: "TheShades",
+		State:          "Vetinari",
+	}
+
+	expectedReporterInstance := reporter.MachineInstance{
+		Id:      "SamVimes",
+		Team:    "CityWatch",
+		Machine: "BSJohnson",
+		Ip:      "treaclemine.road",
+		State:   "Vetinari",
+		Region:  "TheShades",
+	}
+
+	result := convertCloudStructToCommon(testCloudInstance)
+
+	assert.Equal(expectedReporterInstance, result)
+}
 
 func convertJsonStringToReadCloser(jsonString string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(jsonString)))

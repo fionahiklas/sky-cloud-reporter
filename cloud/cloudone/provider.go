@@ -44,3 +44,14 @@ func (provider *provider) ResetFunction() func() {
 		provider.Done = false
 	}
 }
+
+func convertCloudStructToCommon(cloudInstance CloudOneInstance) reporter.MachineInstance {
+	return reporter.MachineInstance{
+		Id:      cloudInstance.Id,
+		Team:    cloudInstance.TeamName,
+		Machine: cloudInstance.Machine,
+		Ip:      cloudInstance.IpAddress,
+		State:   cloudInstance.State,
+		Region:  cloudInstance.DeployedRegion,
+	}
+}

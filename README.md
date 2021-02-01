@@ -46,8 +46,10 @@ go generate ./...
 ### Run the tests
 
 ```
-go test ./...
+go test -cover ./...
 ```
+
+Coverage should be, ideally, > 90%
 
 
 ## Notes

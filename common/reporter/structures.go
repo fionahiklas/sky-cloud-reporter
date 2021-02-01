@@ -6,4 +6,5 @@ type MachineInstance struct {
 	Machine string `json:"machine"`
 	Ip      string `json:"ip"`
 	State   string `json:"state"`
+	Region  string `json:"region"`
 }
