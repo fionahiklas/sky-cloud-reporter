@@ -40,3 +40,4 @@ func TestGrabHandlerReturnsHttpHandler(t *testing.T) {
 }
 
 // TODO: Add way more tests!
+// TODO: No, really, add ALOT more tests, the coverage in this package is terrible :(
