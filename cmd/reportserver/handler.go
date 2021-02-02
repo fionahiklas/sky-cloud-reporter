@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/fionahiklas/sky-cloud-reporter/common/reporter"
 	"github.com/fionahiklas/sky-cloud-reporter/grab"
+	"github.com/fionahiklas/sky-cloud-reporter/sorter"
 	"log"
 	"net/http"
 )
@@ -40,9 +43,19 @@ func (handler *grabHandler) HttpHandler() func(w http.ResponseWriter, r *http.Re
 			log.Printf("Grabbing instance information")
 			providerInstances, _ := grabber.GrabInstances()
 
+			// TODO: This is not safe and will fail if the capacity is exceeded
 			instanceData = append(instanceData, providerInstances...)
 		}
 
+		log.Printf("Sorting data into Report ...")
+		resultMap := make(reporter.MachineReport)
+		sorter.SortIntoTeams(instanceData, resultMap, true)
 
+		log.Printf("Result map ...\n")
+		resultPrettyPrint, _ := json.MarshalIndent(resultMap, "", "    ")
+		log.Printf("Returning result:\n\n%s\n", resultPrettyPrint)
+
+		fmt.Fprintf(w, "%s\n", resultPrettyPrint)
+		log.Printf("Done")
 	}
 }

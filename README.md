@@ -141,6 +141,8 @@ wouldn't work anyway since the HttpResponse is still defined in `grab` and is ne
 * [for loops, range, and slices](https://gobyexample.com/range)
 * [Prettty print JSON](https://golangbyexample.com/print-struct-variables-golang/)
 * [Go http package](https://golang.org/pkg/net/http/)
+* [Slices](https://blog.golang.org/slices)
+* [Concurrency in Go HTTP](https://eli.thegreenplace.net/2019/on-concurrency-in-go-http-servers/)
 
 
 ### Testing
