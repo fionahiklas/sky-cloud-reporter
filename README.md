@@ -67,6 +67,13 @@ go install ./cmd/grabinstances
 grabinstances http://localhost:9001 http://localhost:9002
 ```
 
+### Build and run the server
+
+```
+go install ./cmd/reportserver
+reportserver http://localhost:9001 http://localhost:9002
+```
+
 
 ## Notes
 
