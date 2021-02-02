@@ -53,10 +53,8 @@ func (provider *provider) ProcessResponse(response *http.Response) (machines []r
 	jsonErr := json.Unmarshal(bodyBytes, &instances)
 
 	if jsonErr == nil {
-		// We know the total number of results here so the slice can have a fixed capacity
 		machines = make([]reporter.MachineInstance, 0, instances.Count)
 		for _, instance := range instances.Instances {
-			// This should always be fine since the capacity should never be exceeded
 			machines = append(machines, convertCloudStructToCommon(instance))
 		}
 

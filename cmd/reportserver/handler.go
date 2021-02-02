@@ -29,8 +29,6 @@ func NewGrabHandler(cloudProvidersFactories []func() grab.CloudProvider,
 func (handler *grabHandler) HttpHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Handler function called")
-
-		// TODO: This might need to be bigger and also needs to expand
 		instanceData := make([]reporter.MachineInstance,0, 20)
 
 		for _, providerFactory := range handler.CloudProviderFactories {
@@ -42,8 +40,6 @@ func (handler *grabHandler) HttpHandler() func(w http.ResponseWriter, r *http.Re
 			grabber := handler.GrabberFactory(httpClient, provider)
 			log.Printf("Grabbing instance information")
 			providerInstances, _ := grabber.GrabInstances()
-
-			// TODO: This is not safe and will fail if the capacity is exceeded
 			instanceData = append(instanceData, providerInstances...)
 		}
 

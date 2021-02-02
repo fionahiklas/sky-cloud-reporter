@@ -22,8 +22,6 @@ func SortIntoTeams(instances []reporter.MachineInstance, resultMap reporter.Mach
 		} else {
 			log.Printf("Did not find team '%s' in map, adding it", machineInstance.Team)
 			teamInMap = new(reporter.TeamInstances) // Needs to be a new block of memory
-
-			// TODO: Capacity should maybe be a tunable property for the application
 			teamInMap.Instances = make([]*reporter.MachineInstance, 0, 10)
 			resultMap[machineInstance.Team] = teamInMap
 		}
@@ -32,7 +30,6 @@ func SortIntoTeams(instances []reporter.MachineInstance, resultMap reporter.Mach
 		instanceInMap := new(reporter.MachineInstance)
 		*instanceInMap = machineInstance // Go is sneaky with pointers and values *pointer means value :)
 
-		// TODO: This does not handle adding more nodes that the capacity of the slice above
 		teamInMap.Instances = append(teamInMap.Instances, instanceInMap)
 		teamInMap.Count += 1
 	}

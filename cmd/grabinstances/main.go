@@ -33,7 +33,6 @@ func main() {
 	grabTwoInstances, _ := grabberTwo.GrabInstances()
 
 	log.Printf("Sticking the results together")
-	// TODO: Needs to cope with larger slices
 	allInstanceResults := make([]reporter.MachineInstance, 0, 10)
 	allInstanceResults = append(allInstanceResults, grabOneInstances...)
 	allInstanceResults = append(allInstanceResults, grabTwoInstances...)

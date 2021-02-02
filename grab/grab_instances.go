@@ -14,8 +14,6 @@ func NewGrabber(client HttpClient, provider CloudProvider) *cloudGrabber {
 	}
 }
 
-// TODO: I'm not sure how efficient returning a slice is - does it use reference of
-// TODO: value and if the latter is is copying the underlying array or just pointers?
 func (grabber *cloudGrabber) GrabInstances() (instances []reporter.MachineInstance, err error) {
 
 	// This resets the cloud provider once we've grabbed all the data - the
@@ -23,7 +21,6 @@ func (grabber *cloudGrabber) GrabInstances() (instances []reporter.MachineInstan
 	// function which then needs the extra () to actually be executed
 	defer grabber.cloudProvider.ResetFunction()()
 
-	// TODO: The capacity needs to be a tunable value
 	resultCollector := make([]reporter.MachineInstance, 0, 10)
 
 	for {
@@ -33,8 +30,6 @@ func (grabber *cloudGrabber) GrabInstances() (instances []reporter.MachineInstan
 		}
 		httpResponse, _ := grabber.httpClient.Get(urlString)
 		processedInstances, _ := grabber.cloudProvider.ProcessResponse(httpResponse)
-
-		// TODO: Currently this won't cope with exceeding the capacity of the slice
 		resultCollector = append(resultCollector, processedInstances...)
 	}
 	return resultCollector, nil
