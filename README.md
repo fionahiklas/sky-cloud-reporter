@@ -74,6 +74,12 @@ go install ./cmd/reportserver
 reportserver http://localhost:9001 http://localhost:9002
 ```
 
+Hit with curl
+
+```
+curl http://localhost:8080/report
+```
+
 
 ## Notes
 
